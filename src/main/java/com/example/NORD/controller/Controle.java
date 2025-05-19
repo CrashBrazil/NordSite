@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class Controle {
     private final Usuario_Service usuarioService;
 
-    @PostMapping(path = "/PostUsuario")
+    @PostMapping(path = "/Registrar")
     public ResponseEntity<Usuario> usuarioResponseEntity(@RequestBody Usuario_Dto usuarioDto){
         usuarioService.Save(usuarioDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -31,6 +31,16 @@ public class Controle {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
+    }
+    @PutMapping(path = "/Mudarsenha")
+    public ResponseEntity<Usuario> Sobrescrever(@RequestBody Usuario_Dto usuarioDto,@RequestParam String senha){
+        Boolean validacao = usuarioService.MudarSenha(usuarioDto, senha);
+        if (validacao){
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        }
     }
 
 
