@@ -3,6 +3,7 @@ package com.example.NORD.service;
 
 import com.example.NORD.Repositorio.Repositorio;
 import com.example.NORD.excecoes.ExcecoesPersonalizadas;
+import com.example.NORD.infra.TokenServico;
 import com.example.NORD.mapstruct.MapStruct;
 import com.example.NORD.model.DTO.Usuario_Dto;
 import com.example.NORD.model.Usuario;
@@ -10,6 +11,7 @@ import com.example.NORD.model.UsuarioCargo;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,8 +22,10 @@ import java.util.List;
 @RequiredArgsConstructor
 
 public class Usuario_Service {
-    public UsuarioCargo usuarioCargo;
+
     public final Repositorio repositorio;
+
+
     Logger logger = LoggerFactory.getLogger(Usuario_Service.class);
     BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder(12);
 
@@ -56,6 +60,7 @@ public class Usuario_Service {
             boolean validacao = bCrypt.matches(usuarioDTO.getSenhaUsuario(),banco.getPassword());
 
             if (validacao){
+
                 logger.info("PERMITIDO");
                 return true;
             }
