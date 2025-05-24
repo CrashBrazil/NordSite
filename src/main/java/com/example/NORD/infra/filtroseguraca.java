@@ -24,20 +24,20 @@ public class filtroseguraca extends OncePerRequestFilter {
     private final Repositorio repositorio;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        var token = this.recoverToken(request);
+        String token = this.recoverToken(request);
         if (token != null ){
-            var email = tokenServico.validacao(token);
+            String email = tokenServico.validacao(token);
             UserDetails usuario = repositorio.findByemail(email);
 
 
-            var autenticar = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+            UsernamePasswordAuthenticationToken autenticar = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(autenticar);
         }
         filterChain.doFilter(request,response);
     }
 
     private String recoverToken(HttpServletRequest request){
-        var authHeader = request.getHeader("Autorizacao");
+        String authHeader = request.getHeader("Authorization");
         if (authHeader == null){
             return null;
         }
