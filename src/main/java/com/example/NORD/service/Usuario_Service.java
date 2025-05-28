@@ -15,8 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import static com.example.NORD.model.UsuarioCargo.USER;
-
 
 @Service
 @RequiredArgsConstructor
@@ -100,6 +98,25 @@ public class Usuario_Service {
         catch (Exception e){
             throw new RuntimeException(e);
         }
+
+    }
+
+    public Boolean Deletar(Usuario_Dto usuarioDto){
+        Usuario usuarioBanco = MapStruct.INSTANCE.converter_usuario(usuarioDto);
+        if (usuarioBanco == null ) {
+            throw new RuntimeException("Usuario não encontrado");
+        }
+        UserDetails encontrarUsuario = repositorio.findByemail(usuarioBanco.getEmail());
+        if (encontrarUsuario != null && bCrypt.matches(usuarioDto.getSenhaUsuario(),encontrarUsuario.getPassword())){
+            logger.info("Sucesso");
+            repositorio.delete((Usuario) encontrarUsuario);
+            return true;
+        }
+        else {
+            logger.info("Email não encontrado ou senha invalida");
+            return false;
+        }
+
 
     }
 

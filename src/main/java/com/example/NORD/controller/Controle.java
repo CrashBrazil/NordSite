@@ -53,6 +53,16 @@ public class Controle {
             return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
         }
     }
+    @DeleteMapping(path = "/Deletarconta")
+    public ResponseEntity<Boolean> Deletar(@RequestBody Usuario_Dto usuarioDto){
+        Boolean validar = usuarioService.Deletar(usuarioDto);
+        if (validar){
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
 
 
 }
