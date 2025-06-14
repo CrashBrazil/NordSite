@@ -26,6 +26,9 @@ public class ConfiguracaoSeguranca {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.PUT,"/Nord/Mudarsenha").hasRole("USER")
                         .requestMatchers(HttpMethod.DELETE,"/Nord/Deletarconta").hasRole("USER")
+
+                        .requestMatchers(HttpMethod.POST,"/Nord/Salasdocatalogo/{idcatalogo}").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/Nord/CriarCatalogo").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Nord/Registrar").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Nord/Login").permitAll()
                         .anyRequest().authenticated()
@@ -34,3 +37,4 @@ public class ConfiguracaoSeguranca {
                 .build();
     }
 }
+

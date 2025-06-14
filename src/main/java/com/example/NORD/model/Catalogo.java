@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 @Data
@@ -17,9 +16,9 @@ public class Catalogo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(precision = 2)
     private Integer id_Catalogo;
-    @Column(length = 25)
+    @Column(length = 25, unique = true)
     @NotNull
-    private String nome_Catalogo;
+    private String nomeCatalogo;
 
     @OneToMany(mappedBy = "catalogo")
     private List<Usuario> usuarios;
