@@ -7,17 +7,14 @@ import com.example.NORD.mapstruct.MapStruct;
 import com.example.NORD.model.Catalogo;
 import com.example.NORD.model.DTO.CatalogoDto;
 import com.example.NORD.model.DTO.SalaDto;
-import com.example.NORD.model.Ingresso;
 import com.example.NORD.model.Sala;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.ServiceLoader;
 
 @Service
 @RequiredArgsConstructor
@@ -75,7 +72,9 @@ public class Catalogo_Service {
 
     }
 
-
+//    public void associarIngresso(Integer idIngresso, List<>){
+//
+//    }
 
 
 }
