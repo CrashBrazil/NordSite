@@ -10,7 +10,7 @@ public enum UsuarioCargo {
     USER("user"),
     ADMIN("admin");
 
-    private String Cargo;
+    private final String Cargo;
 
 
 

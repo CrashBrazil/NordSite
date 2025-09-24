@@ -49,7 +49,7 @@ public class Catalogo_Service {
 
 
             if (catalogo.isEmpty() || sala_Dto == null){
-                logger.error("Deu merda");
+                logger.error("Falha ao adicionar sala");
                 return false;
             }
 
@@ -60,9 +60,6 @@ public class Catalogo_Service {
                 repositorioSala.save(salaf);
             }
 
-
-
-
             return true;
         }
         catch (Exception e){
@@ -71,10 +68,6 @@ public class Catalogo_Service {
 
 
     }
-
-//    public void associarIngresso(Integer idIngresso, List<>){
-//
-//    }
 
 
 }
