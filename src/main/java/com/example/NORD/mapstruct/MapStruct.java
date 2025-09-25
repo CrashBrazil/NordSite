@@ -2,8 +2,10 @@ package com.example.NORD.mapstruct;
 
 import com.example.NORD.model.Catalogo;
 import com.example.NORD.model.DTO.CatalogoDto;
+import com.example.NORD.model.DTO.IngressoDto;
 import com.example.NORD.model.DTO.SalaDto;
 import com.example.NORD.model.DTO.Usuario_Dto;
+import com.example.NORD.model.Ingresso;
 import com.example.NORD.model.Sala;
 import com.example.NORD.model.Usuario;
 import org.mapstruct.Mapper;
@@ -20,5 +22,6 @@ public abstract class MapStruct {
     public abstract Usuario converter_usuario(Usuario_Dto usuarioDto);
     public abstract Catalogo converter_catalogo(CatalogoDto catalogo);
     public abstract List<Sala> converter_sala(List<SalaDto> sala);
+    public abstract Ingresso converter_ingresso(IngressoDto ingresso);
 
 }
