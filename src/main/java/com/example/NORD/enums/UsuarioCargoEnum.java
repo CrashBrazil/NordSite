@@ -1,4 +1,4 @@
-package com.example.NORD.model;
+package com.example.NORD.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 
-public enum UsuarioCargo {
+public enum UsuarioCargoEnum {
     USER("user"),
     ADMIN("admin");
 

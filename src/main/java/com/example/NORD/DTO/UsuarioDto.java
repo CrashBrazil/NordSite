@@ -1,5 +1,7 @@
-package com.example.NORD.model.DTO;
+package com.example.NORD.DTO;
 
+
+import com.example.NORD.enums.UsuarioCargoEnum;
 import com.example.NORD.model.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -7,19 +9,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Date;
-import java.util.Collection;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Usuario_Dto {
+public class UsuarioDto {
 
     @Column(length = 25)
     @NotNull
@@ -37,7 +35,7 @@ public class Usuario_Dto {
     private String email;
     @NotNull
     private String senhaUsuario;
-    private UsuarioCargo usuarioCargos;
+    private UsuarioCargoEnum usuarioCargosEnum;
 
     @OneToMany(mappedBy = "usuario")
     private List<Ingresso> ingresso;

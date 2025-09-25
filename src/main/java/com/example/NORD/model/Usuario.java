@@ -1,5 +1,7 @@
 package com.example.NORD.model;
 
+
+import com.example.NORD.enums.UsuarioCargoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -40,7 +42,7 @@ public class Usuario implements UserDetails{
     private String email;
     @NotNull
     private String senhaUsuario;
-    private UsuarioCargo usuarioCargos;
+    private UsuarioCargoEnum usuarioCargos;
 
     @OneToMany(mappedBy = "usuario")
     private List<Ingresso> ingresso;
@@ -58,7 +60,7 @@ public class Usuario implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.usuarioCargos == UsuarioCargo.ADMIN){
+        if (this.usuarioCargos == UsuarioCargoEnum.ADMIN){
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         }
         else {
