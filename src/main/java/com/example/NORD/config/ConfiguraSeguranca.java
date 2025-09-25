@@ -1,4 +1,4 @@
-package com.example.NORD.infra;
+package com.example.NORD.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +15,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class ConfiguracaoSeguranca {
-    public final filtroseguraca filtroseguraca;
+public class ConfiguraSeguranca {
+    public final ConfiguraFiltroSeguraca filtroseguraca;
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throws Exception {
 

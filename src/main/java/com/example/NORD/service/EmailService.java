@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class EmailServico {
+public class EmailService {
     private JavaMailSender javaMailSender;
 
 

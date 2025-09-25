@@ -1,9 +1,9 @@
 package com.example.NORD.service;
 
 
-import com.example.NORD.Repositorio.RepositorioIngresso;
-import com.example.NORD.mapstruct.MapStruct;
-import com.example.NORD.model.DTO.IngressoDto;
+import com.example.NORD.repository.IngressoRepository;
+import com.example.NORD.util.MapStruct;
+import com.example.NORD.DTO.IngressoDto;
 import com.example.NORD.model.Ingresso;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 
 public class IngressoService {
 
-    private final RepositorioIngresso repositorioIngresso;
+    private final IngressoRepository ingressoRepository;
 
     public void criarIngresso(IngressoDto ingressoDto){
-        Ingresso ingresso = MapStruct.INSTANCE.converter_ingresso(ingressoDto);
+        Ingresso ingresso = MapStruct.INSTANCE.converterIngresso(ingressoDto);
 
-        repositorioIngresso.save(ingresso);
+        ingressoRepository.save(ingresso);
     }
     public void associarIngresso(){
 
