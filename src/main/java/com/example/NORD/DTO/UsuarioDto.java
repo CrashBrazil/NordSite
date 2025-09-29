@@ -10,9 +10,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
+
 
 @Data
 @NoArgsConstructor
@@ -21,8 +22,8 @@ import java.util.List;
 public class UsuarioDto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer idUsuario;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID idUsuario;
 
     @Column(length = 25)
     @NotNull

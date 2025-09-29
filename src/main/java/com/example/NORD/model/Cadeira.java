@@ -6,15 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class Cadeira {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(precision = 2)
-    private Integer id_Cadeira;
+    private UUID id_Cadeira;
     @Column(precision = 2)
     @NotNull
     private Integer quantidadeCadeira;

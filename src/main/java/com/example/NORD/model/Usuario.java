@@ -17,32 +17,10 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
-public class Usuario implements UserDetails{
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer idUsuario;
-
-    @Column(length = 25)
-    @NotNull
-    private String nomeUsuario;
-    @Column(length = 25)
-    @NotNull
-    private String sobrenomeUsuario;
-    @Column(length = 11, unique = true)
-    @NotNull
-    private String cpf;
-    private LocalDate dataNascimento = null;
-    @Column(length = 30, unique = true)
-    @NotNull
-    private String email;
-    @NotNull
-    private String senhaPessoa;
-    private UsuarioCargoEnum cargoPessoa;
+public class Usuario extends Pessoa implements UserDetails{
 
     @OneToMany(mappedBy = "usuario")
     private List<Ingresso> ingresso;

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -13,9 +14,9 @@ import java.util.List;
 @Entity
 public class Catalogo {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(precision = 2)
-    private Integer id_Catalogo;
+    private UUID id_Catalogo;
     @Column(length = 25, unique = true)
     @NotNull
     private String nomeCatalogo;
