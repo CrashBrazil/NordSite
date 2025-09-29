@@ -31,10 +31,10 @@ public class UsuarioService {
 
     public Usuario save(UsuarioDto usuarioDto){
         try {
-            if (usuarioDto.getSenhaUsuario().length()>7){
-                String senha_Codificada=bCrypt.encode(usuarioDto.getSenhaUsuario());
-                usuarioDto.setSenhaUsuario(senha_Codificada);
-                usuarioDto.setUsuarioCargosEnum(UsuarioCargoEnum.valueOf("USER"));
+            if (usuarioDto.getSenhaPessoa().length()>7){
+                String senha_Codificada=bCrypt.encode(usuarioDto.getSenhaPessoa());
+                usuarioDto.setSenhaPessoa(senha_Codificada);
+                usuarioDto.setCargoPessoa(UsuarioCargoEnum.valueOf("USER"));
                 return usuarioRepository.save(MapStruct.INSTANCE.converterUsuario(usuarioDto));
             }
 
@@ -56,7 +56,7 @@ public class UsuarioService {
                 throw new PersonalizadaException("Verifique a sua senha e nome de usuário e tente novamente.");
             }
 
-            boolean validarSenha = bCrypt.matches(usuarioDTO.getSenhaUsuario(),usuarioNoBanco.getPassword());
+            boolean validarSenha = bCrypt.matches(usuarioDTO.getSenhaPessoa(),usuarioNoBanco.getPassword());
 
             if (validarSenha){
                 logger.info("PERMITIDO");
@@ -84,7 +84,7 @@ public class UsuarioService {
 
             if (validarSenha && usuarioAntigo.novaSenha().length()>7  ) {
                 String senhaCondificada = bCrypt.encode(usuarioAntigo.novaSenha());
-                usuarioNovo.setSenhaUsuario(senhaCondificada);
+                usuarioNovo.setSenhaPessoa(senhaCondificada);
                 usuarioRepository.save(usuarioNovo);
                 return true;
             }
@@ -107,7 +107,7 @@ public class UsuarioService {
             throw new RuntimeException("Usuario não encontrado");
         }
         UserDetails pesquinarNoBancoUsuario = usuarioRepository.findByemail(usuarioArmazenadoNoBanco.getEmail());
-        if (pesquinarNoBancoUsuario != null && bCrypt.matches(usuarioDto.getSenhaUsuario(),pesquinarNoBancoUsuario.getPassword())){
+        if (pesquinarNoBancoUsuario != null && bCrypt.matches(usuarioDto.getSenhaPessoa(),pesquinarNoBancoUsuario.getPassword())){
             logger.info("Sucesso");
             usuarioRepository.delete((Usuario) pesquinarNoBancoUsuario);
             return true;
