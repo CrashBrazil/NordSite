@@ -11,38 +11,13 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.sql.Date;
 import java.util.Collection;
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
-public class Usuario implements UserDetails{
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id_Usuario;
-
-    @Column(length = 25)
-    @NotNull
-    private String nome_Usuario;
-    @Column(length = 25)
-    @NotNull
-    private String sobrenome_Usuario;
-    @Column(length = 11, unique = true)
-    @NotNull
-    private String cpf;
-    @NotNull
-    private Date diaAniversario;
-    @Column(length = 30, unique = true)
-    @NotNull
-    private String email;
-    @NotNull
-    private String senhaUsuario;
-    private UsuarioCargoEnum usuarioCargos;
+public class Usuario extends Pessoa implements UserDetails{
 
     @OneToMany(mappedBy = "usuario")
     private List<Ingresso> ingresso;
@@ -60,7 +35,7 @@ public class Usuario implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.usuarioCargos == UsuarioCargoEnum.ADMIN){
+        if (this.cargoPessoa == UsuarioCargoEnum.ADMIN){
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         }
         else {
@@ -70,7 +45,7 @@ public class Usuario implements UserDetails{
 
     @Override
     public String getPassword() {
-        return senhaUsuario;
+        return senhaPessoa;
     }
 
     @Override

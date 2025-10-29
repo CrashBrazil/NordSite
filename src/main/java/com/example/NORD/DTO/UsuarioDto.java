@@ -10,8 +10,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
+
 
 @Data
 @NoArgsConstructor
@@ -19,23 +21,27 @@ import java.util.List;
 @Builder
 public class UsuarioDto {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID idUsuario;
+
     @Column(length = 25)
     @NotNull
-    private String nome_Usuario;
+    private String nomeUsuario;
     @Column(length = 25)
     @NotNull
-    private String sobrenome_Usuario;
-    @Column(length = 11,unique = true)
+    private String sobrenomeUsuario;
+    @Column(length = 11, unique = true)
     @NotNull
     private String cpf;
-    @NotNull
-    private Date diaAniversario;
+
+    private LocalDate dataNascimento = null;
     @Column(length = 30, unique = true)
     @NotNull
     private String email;
     @NotNull
-    private String senhaUsuario;
-    private UsuarioCargoEnum usuarioCargosEnum;
+    private String senhaPessoa;
+    private UsuarioCargoEnum cargoPessoa;
 
     @OneToMany(mappedBy = "usuario")
     private List<Ingresso> ingresso;
@@ -50,6 +56,5 @@ public class UsuarioDto {
     @ManyToOne
     @JoinColumn(name = "id_Sala_FK")
     private Sala sala_Usuario;
-
 
 }

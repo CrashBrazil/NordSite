@@ -9,15 +9,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class IngressoDto {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(precision = 2)
-    private Integer id_Ingresso;
+    private UUID id_Ingresso;
     @Column(length = 20)
     @NotNull
     private String nome_Ingresso;

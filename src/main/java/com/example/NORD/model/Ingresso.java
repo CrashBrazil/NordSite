@@ -7,15 +7,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.query.sql.internal.ParameterRecognizerImpl;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class Ingresso {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(precision = 2)
-    private Integer id_Ingresso;
+    private UUID id_Ingresso;
     @Column(length = 20)
     @NotNull
     private String nome_Ingresso;

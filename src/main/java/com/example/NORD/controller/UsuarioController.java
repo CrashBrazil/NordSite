@@ -1,6 +1,8 @@
 package com.example.NORD.controller;
 
 
+import com.example.NORD.DTO.LoginRespostaDto;
+import com.example.NORD.DTO.ResgistrarRespostaDto;
 import com.example.NORD.DTO.UsuarioDto;
 import com.example.NORD.config.ConfiguraTokenServico;
 import com.example.NORD.util.MapStruct;
@@ -9,9 +11,13 @@ import com.example.NORD.model.Usuario;
 import com.example.NORD.service.EmailService;
 import com.example.NORD.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestController
 @RequestMapping("Nord")
@@ -20,22 +26,30 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
     private final ConfiguraTokenServico configuraTokenServico;
     private final EmailService emailService;
+    private final Logger log = LoggerFactory.getLogger(UsuarioController.class);
 
 
     @PostMapping(path = "/Registrar")
-    public ResponseEntity<Usuario> usuarioResponseEntity(@RequestBody UsuarioDto usuarioDto){
-        usuarioService.save(usuarioDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<ResgistrarRespostaDto> usuarioResponseEntity(@RequestBody UsuarioDto usuarioDto){
+        try {
+            Usuario usuario = usuarioService.save(usuarioDto);
+            return new ResponseEntity<>(new ResgistrarRespostaDto(usuario),HttpStatus.CREATED);
+        }
+        catch (SQLIntegrityConstraintViolationException | IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @PostMapping(path = "/Login")
-    public ResponseEntity<String> loginUsuario(@RequestBody UsuarioDto usuarioDto){
+    public ResponseEntity<LoginRespostaDto> loginUsuario(@RequestBody UsuarioDto usuarioDto){
         Boolean validacao = usuarioService.login(usuarioDto);
         if (validacao) {
             Usuario usuario = MapStruct.INSTANCE.converterUsuario(usuarioDto);
             String token = configuraTokenServico.gerarToken(usuario);
             emailService.enviarEmail(usuarioDto.getEmail(), "Seja bem-vindo ao NORD", String.format("Aqui esta seu token para validação da conta: %s ",token));
-            return new ResponseEntity<>(token,HttpStatus.ACCEPTED);
+
+            return new ResponseEntity<>(new LoginRespostaDto(token),HttpStatus.ACCEPTED);
         }
         else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -49,7 +63,7 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
     @DeleteMapping(path = "/Deletarconta")

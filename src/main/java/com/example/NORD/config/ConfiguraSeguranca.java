@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -27,7 +28,7 @@ public class ConfiguraSeguranca {
                         .requestMatchers(HttpMethod.PUT,"/Nord/Mudarsenha").hasRole("USER")
                         .requestMatchers(HttpMethod.DELETE,"/Nord/Deletarconta").hasRole("USER")
 
-                        .requestMatchers(HttpMethod.POST,"/Nord/Salasdocatalogo/{idcatalogo}").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/Nord/Salasdocatalogo/{idcatalogo}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST,"/Nord/CriarCatalogo").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Nord/Registrar").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Nord/Login").permitAll()
@@ -35,6 +36,11 @@ public class ConfiguraSeguranca {
                 )
                 .addFilterBefore(filtroseguraca, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    @Bean
+    public BCryptPasswordEncoder BcryptPasswordEncoder() {
+        return new BCryptPasswordEncoder(12);
     }
 }
 

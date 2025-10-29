@@ -2,6 +2,7 @@ package com.example.NORD.service;
 
 
 import com.example.NORD.repository.IngressoRepository;
+import com.example.NORD.service.impl.IngressoServiceInterface;
 import com.example.NORD.util.MapStruct;
 import com.example.NORD.DTO.IngressoDto;
 import com.example.NORD.model.Ingresso;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 
-public class IngressoService {
+public class IngressoService implements IngressoServiceInterface {
 
     private final IngressoRepository ingressoRepository;
 
@@ -21,8 +22,6 @@ public class IngressoService {
         ingressoRepository.save(ingresso);
     }
     public void associarIngresso(){
-
-
 
     }
 }
