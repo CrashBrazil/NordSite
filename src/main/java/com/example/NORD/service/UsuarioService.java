@@ -4,6 +4,7 @@ package com.example.NORD.service;
 import com.example.NORD.enums.UsuarioCargoEnum;
 import com.example.NORD.repository.UsuarioRepository;
 import com.example.NORD.exception.PersonalizadaException;
+import com.example.NORD.service.impl.UsuarioServiceInterface;
 import com.example.NORD.util.MapStruct;
 import com.example.NORD.DTO.UsuarioDto;
 import com.example.NORD.model.Usuario;
@@ -14,101 +15,106 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
+
 
 @Service
 @RequiredArgsConstructor
 
-public class UsuarioService {
+public class UsuarioService implements UsuarioServiceInterface {
 
     public final UsuarioRepository usuarioRepository;
-
-
-
-
+    public final BCryptPasswordEncoder bcryptPasswordEncoder;
     Logger logger = LoggerFactory.getLogger(UsuarioService.class);
-    BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder(12);
 
 
-    public Usuario save(UsuarioDto usuarioDto){
-        try {
-            if (usuarioDto.getSenhaPessoa().length()>7){
-                String senha_Codificada=bCrypt.encode(usuarioDto.getSenhaPessoa());
-                usuarioDto.setSenhaPessoa(senha_Codificada);
-                usuarioDto.setCargoPessoa(UsuarioCargoEnum.valueOf("USER"));
-                return usuarioRepository.save(MapStruct.INSTANCE.converterUsuario(usuarioDto));
-            }
 
-            else {
-                throw new PersonalizadaException("Senha muito pequena.");
-            }
+    public Usuario save(UsuarioDto usuarioDto) throws SQLIntegrityConstraintViolationException, IllegalArgumentException {
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        Usuario usuarioDTO = MapStruct.INSTANCE.converterUsuario(usuarioDto);
+        UserDetails usuarioNoBanco = usuarioRepository.findByemail(usuarioDTO.getEmail());
+
+        if(usuarioNoBanco != null){
+            throw new SQLIntegrityConstraintViolationException();
         }
+        if (usuarioDto != null && usuarioDto.getSenhaPessoa().length()>7){
+            String senha_Codificada=bcryptPasswordEncoder.encode(usuarioDto.getSenhaPessoa());
+            usuarioDTO.setSenhaPessoa(senha_Codificada);
+            usuarioDTO.setCargoPessoa(UsuarioCargoEnum.valueOf("USER"));
+            return usuarioRepository.save(usuarioDTO);
+        }
+
+        else {
+            throw new IllegalArgumentException();
+        }
+
     }
     public Boolean login(UsuarioDto usuarioDto){
-        try{
-            Usuario usuarioDTO = MapStruct.INSTANCE.converterUsuario(usuarioDto);
-            UserDetails usuarioNoBanco = usuarioRepository.findByemail(usuarioDTO.getEmail());
 
+       try {
+           Usuario usuarioDTO = MapStruct.INSTANCE.converterUsuario(usuarioDto);
+           UserDetails usuarioNoBanco = usuarioRepository.findByemail(usuarioDTO.getEmail());
 
-            if (usuarioNoBanco == null|| usuarioNoBanco.getPassword().isEmpty() || usuarioNoBanco.getUsername().isEmpty()){
-                throw new PersonalizadaException("Verifique a sua senha e nome de usuário e tente novamente.");
-            }
+           if (usuarioNoBanco == null || usuarioNoBanco.getPassword().isEmpty() || usuarioNoBanco.getUsername().isEmpty()) {
+               throw new RuntimeException();
+           }
 
-            boolean validarSenha = bCrypt.matches(usuarioDTO.getSenhaPessoa(),usuarioNoBanco.getPassword());
+           boolean validarSenha = bcryptPasswordEncoder.matches(usuarioDTO.getSenhaPessoa(), usuarioNoBanco.getPassword());
 
-            if (validarSenha){
-                logger.info("PERMITIDO");
-                return true;
-            }
-            else {
-                logger.info("NEGADO");
-                return false;
+           if (validarSenha) {
+               logger.info("PERMITIDO");
+               return true;
+           } else {
+               logger.info("NEGADO");
+               return false;
 
-            }
+           }
+       }
+       catch (RuntimeException e){
+           return false;
+       }
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
-    public Boolean mudarSenha(MudarSenhaService usuarioAntigo){
-        try {
-            UserDetails usuarioNoBanco = usuarioRepository.findByemail(usuarioAntigo.email());
-            Usuario usuarioNovo = (Usuario) usuarioNoBanco;
-            boolean validarSenha = bCrypt.matches(usuarioAntigo.senhaAntiga(),usuarioNoBanco.getPassword());
+    public Boolean mudarSenha(MudarSenhaService usuarioAntigo) {
 
-            if (usuarioAntigo.senhaAntiga().isEmpty() || usuarioAntigo.email().isEmpty() || usuarioAntigo.novaSenha().isEmpty()) {
-                throw new RuntimeException("isEmpty");
-            }
+        UserDetails usuarioNoBanco = usuarioRepository.findByemail(usuarioAntigo.email());
+        Usuario usuarioNovo = (Usuario) usuarioNoBanco;
+        if (usuarioNoBanco == null){
+            logger.error("NullPointerException");
+            return false;
+        }
+        boolean validarSenha = bcryptPasswordEncoder.matches(usuarioAntigo.senhaAntiga(),usuarioNoBanco.getPassword());
 
-            if (validarSenha && usuarioAntigo.novaSenha().length()>7  ) {
-                String senhaCondificada = bCrypt.encode(usuarioAntigo.novaSenha());
-                usuarioNovo.setSenhaPessoa(senhaCondificada);
-                usuarioRepository.save(usuarioNovo);
-                return true;
-            }
-            else {
-                throw new PersonalizadaException("Senha muito pequena.");
-            }
 
+        if (usuarioAntigo.senhaAntiga().isEmpty() || usuarioAntigo.email().isEmpty() || usuarioAntigo.novaSenha().isEmpty()) {
+            logger.error("IllegalArgumentException");
+            return false;
 
         }
-        catch (Exception e){
-            throw new RuntimeException(e);
+
+        if (validarSenha && usuarioAntigo.novaSenha().length()>7  ) {
+            String senhaCondificada = bcryptPasswordEncoder.encode(usuarioAntigo.novaSenha());
+            usuarioNovo.setSenhaPessoa(senhaCondificada);
+            usuarioRepository.save(usuarioNovo);
+            return true;
         }
+        else {
+            return false;
+        }
+
+
+
+
 
     }
 
     public Boolean deletar(UsuarioDto usuarioDto){
+
         Usuario usuarioArmazenadoNoBanco = MapStruct.INSTANCE.converterUsuario(usuarioDto);
 
-        if (usuarioArmazenadoNoBanco == null ) {
-            throw new RuntimeException("Usuario não encontrado");
-        }
         UserDetails pesquinarNoBancoUsuario = usuarioRepository.findByemail(usuarioArmazenadoNoBanco.getEmail());
-        if (pesquinarNoBancoUsuario != null && bCrypt.matches(usuarioDto.getSenhaPessoa(),pesquinarNoBancoUsuario.getPassword())){
-            logger.info("Sucesso");
+        if (pesquinarNoBancoUsuario != null && bcryptPasswordEncoder.matches(usuarioDto.getSenhaPessoa(),pesquinarNoBancoUsuario.getPassword())){
             usuarioRepository.delete((Usuario) pesquinarNoBancoUsuario);
             return true;
         }
@@ -116,8 +122,6 @@ public class UsuarioService {
             logger.info("Email não encontrado ou senha invalida");
             return false;
         }
-
-
     }
 
 

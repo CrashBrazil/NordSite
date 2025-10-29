@@ -1,5 +1,7 @@
 package com.example.NORD.service;
 
+import com.example.NORD.service.impl.EmailServiceInterface;
+import com.example.NORD.service.impl.IngressoServiceInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -7,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class EmailService {
+public class EmailService implements EmailServiceInterface {
     private JavaMailSender javaMailSender;
 
 

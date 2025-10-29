@@ -41,7 +41,7 @@ public class ConfiguraTokenServico {
                     .getSubject();
         }
         catch (JWTVerificationException e){
-            return "";
+            return "Token Invalido";
         }
     }
 

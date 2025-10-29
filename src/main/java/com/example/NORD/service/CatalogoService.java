@@ -1,8 +1,10 @@
 package com.example.NORD.service;
 
 
+import com.example.NORD.model.Ingresso;
 import com.example.NORD.repository.SalaRepository;
 import com.example.NORD.repository.CatalogoRepository;
+import com.example.NORD.service.impl.CatalogoServiceInterface;
 import com.example.NORD.util.MapStruct;
 import com.example.NORD.model.Catalogo;
 import com.example.NORD.DTO.CatalogoDto;
@@ -18,56 +20,51 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CatalogoService {
+public class CatalogoService implements CatalogoServiceInterface {
     public final CatalogoRepository repositorio_Catalogo;
     public final SalaRepository salaRepository;
 
 
     Logger logger = LoggerFactory.getLogger(CatalogoService.class);
 
-    public Boolean criarCatalogo(CatalogoDto catalogo_Dto){
-        try {
-            Catalogo catalogodb = repositorio_Catalogo.findBynomeCatalogo(catalogo_Dto.getNomeCatalogo());
-            if (catalogo_Dto.getNomeCatalogo() == null || catalogo_Dto.getNomeCatalogo().isEmpty() || catalogodb != null){
-                logger.error("Erro de verificão");
-                return false;
-            }
-            repositorio_Catalogo.save(MapStruct.INSTANCE.converterCatalogo(catalogo_Dto));
-            logger.info("Sucesso");
-            return true;
+    public Catalogo criarCatalogo(CatalogoDto catalogo_Dto){
+        Catalogo catalogodb = repositorio_Catalogo.findBynomeCatalogo(catalogo_Dto.getNomeCatalogo());
 
+        if (catalogo_Dto.getNomeCatalogo() == null || catalogo_Dto.getNomeCatalogo().isEmpty() || catalogodb != null){
+
+            return null;
         }
-        catch (Exception e){
-            throw new RuntimeException(e);
-        }
+
+
+        return repositorio_Catalogo.save(MapStruct.INSTANCE.converterCatalogo(catalogo_Dto));
 
     }
+
     public Boolean adicionarSala(Integer idCatalogo, List<SalaDto> sala_Dto){
-        try {
-            Optional<Catalogo> catalogo = repositorio_Catalogo.findById(idCatalogo);
-            List<Sala> sala = MapStruct.INSTANCE.converterSala(sala_Dto);
+
+        Optional<Catalogo> catalogo = repositorio_Catalogo.findById(idCatalogo);
+        List<Sala> sala = MapStruct.INSTANCE.converterSala(sala_Dto);
 
 
-            if (catalogo.isEmpty() || sala_Dto == null){
-                logger.error("Falha ao adicionar sala");
-                return false;
-            }
-
-            catalogo.get().getSalas().addAll(sala);
-            repositorio_Catalogo.save(catalogo.get());
-            for (Sala salaf : sala) {
-                salaf.setCatalogo_Sala(catalogo.get());
-                salaRepository.save(salaf);
-            }
-
-            return true;
-        }
-        catch (Exception e){
-            throw new RuntimeException(e);
+        if (catalogo.isEmpty() || sala_Dto == null){
+            return false;
         }
 
-
+        catalogo.get().getSalas().addAll(sala);
+        repositorio_Catalogo.save(catalogo.get());
+        for (Sala salaf : sala) {
+            salaf.setCatalogo_Sala(catalogo.get());
+            salaRepository.save(salaf);
+        }
+        return true;
     }
+
+//    public List<Ingresso> criarIngressos(SalaDto sala_Dto){
+//
+//    }
+
+
+
 
 
 }

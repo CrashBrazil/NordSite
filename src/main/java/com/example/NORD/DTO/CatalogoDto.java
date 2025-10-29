@@ -31,4 +31,5 @@ public class CatalogoDto {
 
     @OneToMany(mappedBy = "catalogo_Ingresso")
     private List<Ingresso> ingressos;
+
 }
