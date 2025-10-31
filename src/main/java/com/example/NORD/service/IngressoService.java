@@ -16,12 +16,13 @@ public class IngressoService implements IngressoServiceInterface {
 
     private final IngressoRepository ingressoRepository;
 
-    public void criarIngresso(IngressoDto ingressoDto){
-        Ingresso ingresso = MapStruct.INSTANCE.converterIngresso(ingressoDto);
+    public Ingresso criarIngresso(IngressoDto ingressoDto){
+        if(ingressoDto != null){
+            Ingresso ingresso = MapStruct.INSTANCE.converterIngresso(ingressoDto);
+            return ingressoRepository.save(ingresso);
+        }
 
-        ingressoRepository.save(ingresso);
+        return null;
     }
-    public void associarIngresso(){
 
-    }
 }

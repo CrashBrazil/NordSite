@@ -1,8 +1,8 @@
 package com.example.NORD.controller;
 
 
-import com.example.NORD.DTO.LoginRespostaDto;
-import com.example.NORD.DTO.ResgistrarRespostaDto;
+import com.example.NORD.DTO.Respostas.LoginRespostaDto;
+import com.example.NORD.DTO.Respostas.ResgistrarRespostaDto;
 import com.example.NORD.DTO.UsuarioDto;
 import com.example.NORD.config.ConfiguraTokenServico;
 import com.example.NORD.util.MapStruct;

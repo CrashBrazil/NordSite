@@ -1,4 +1,4 @@
-package com.example.NORD.DTO;
+package com.example.NORD.DTO.Respostas;
 
 import com.example.NORD.model.Usuario;
 
