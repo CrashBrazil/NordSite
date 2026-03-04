@@ -1,0 +1,17 @@
+spring.application.name=Nord
+spring.datasource.url={{secret "dburl"}}
+spring.datasource.password={{secret "MYSQL_ROOT_PASSWORD" }}
+spring.datasource.username={{secret "MYSQL_USER_ROOT"}}
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+api.seguranca.token.secret={{secret "JWT_SECRET"}}
+
+spring.mail.host=sandbox.smtp.mailtrap.io
+spring.mail.port=587
+spring.mail.username=73870caf1c9049
+spring.mail.password=1ab8e7740fdc58
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+

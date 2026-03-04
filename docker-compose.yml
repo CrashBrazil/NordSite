@@ -1,14 +1,9 @@
-version: "3.7"
+version: "3.9"
 services:
   nord_java:
-    image: 192.168.3.2:5000/nord_site:2.0
+    image: 192.168.3.2:5000/nord_site:15.0
     depends_on:
       - db_mysql 
-    environment:
-      MYSQL_HOST: db_mysql
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-      MYSQL_PORT: 3306
     deploy:
       mode: replicated
       replicas: 2
@@ -31,20 +26,32 @@ services:
       - target: 8080
         published: 8080
         mode: ingress  
-
+    configs:
+      - source: application.properties
+        target: /usr/app/config/application.properties
+    secrets:
+      - MYSQL_USER_ROOT
+      - MYSQL_ROOT_PASSWORD
+      - dburl
+      - JWT_SECRET
     networks:
       - spring_mysql
 
   db_mysql:
     image: mysql:9.6.0
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/MYSQL_ROOT_PASSWORD
+      MYSQL_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
+      MYSQL_USER_FILE: /run/secrets/MYSQL_USER
       MYSQL_DATABASE: Nord
-      MYSQL_USER: CrashDocker
-      MYSQL_PASSWORD: crashdocker
+    secrets:
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD
     deploy:
       mode: replicated
-      replicas: 2
+      replicas: 1
       restart_policy:
         condition: on-failure
         delay: 2s
@@ -97,7 +104,28 @@ services:
     ports:
       - 9000:80
     restart: always
+
+configs:
+  application.properties:
+    template_driver: golang
+    file: ./src/main/resources/application.properties.tmpl
+    name: nord.application.properties
 volumes:
   mysql_dados:
 networks:
   spring_mysql:
+secrets:
+  MYSQL_USER_ROOT:
+    external: true
+  MYSQL_PASSWORD:
+    external: true
+  JWT_SECRET:
+    external: true
+  MYSQL_USER:
+    external: true
+  MYSQL_ROOT_PASSWORD:
+    external: true
+  MYSQL_ROOT_HOST:
+    external: true 
+  dburl:
+    external: true
